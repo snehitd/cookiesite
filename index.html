@@ -4,12 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>All Trackers — Scanner Target Page</title>
-  <!-- 
   <link rel="stylesheet" href="seqrite-config.css"/>
   <script data-config="seqriteConfig" type="application/javascript" src="seqrite.js"></script>
   <script type="application/javascript" src="seqrite-config.js"></script>
   <script defer src="seqrite-enforcement.js"></script>
-  -->
   <!--
   ══════════════════════════════════════════════════════════════════════════
   1. GOOGLE — GTM-N8M7CRQR
@@ -21,14 +19,26 @@
   No consent mode configured — all cookies fire immediately.
   ══════════════════════════════════════════════════════════════════════════
   -->
+  <!-- BEFORE: standard GTM head snippet — loads container unconditionally -->
+  <!--
   <script>
   (function(w,d,s,l,i){w[l]=w[l]||[];
-  w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});
-  var f=d.getElementsByTagName(s)[0],j=d.createElement(s),
-  dl=l!='dataLayer'?'&l='+l:'';j.async=true;
-  j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+  w[l].push({'gtm.start': new Date().getTime(), event:'gtm.js'});
+  var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';
+  j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;
   f.parentNode.insertBefore(j,f);
   })(window,document,'script','dataLayer','GTM-N8M7CRQR');
+  </script>
+  -->
+  <!-- AFTER: Klaro-blocked GTM container (§10.4) — gtm.js only loads when "analytics"
+       category is consented. data-name="analytics" matches seqrite-config.js services array.
+       Do NOT keep the standard snippet above alongside this — it causes double-firing. -->
+  <script type="text/plain"
+          data-type="text/javascript"
+          data-name="analytics"
+          data-src="https://www.googletagmanager.com/gtm.js?id=GTM-N8M7CRQR">
   </script>
 
   <!--
@@ -39,13 +49,38 @@
   _ga is shared with Stream 1 — one client ID covers all properties.
   ══════════════════════════════════════════════════════════════════════════
   -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-01XNDLZCYQ"></script>
-  <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){ dataLayer.push(arguments); }
-  gtag('js', new Date());
-  gtag('config', 'G-01XNDLZCYQ');
+  <!-- Google Analytics 4 (external script) -->
+  <!-- BEFORE: loads unconditionally -->
+  <!--
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-89RWJTCPLZ"></script>
+  -->
+  <!-- AFTER: blocked by Klaro until "analytics" category is consented (§6.1, §10.3.1) -->
+  <script type="text/plain"
+          data-type="text/javascript"
+          data-name="analytics"
+          data-src="https://www.googletagmanager.com/gtag/js?id=G-89RWJTCPLZ">
   </script>
+
+
+  <!-- BEFORE: inline GA4 init runs unconditionally -->
+  <!--
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-89RWJTCPLZ');
+  </script>
+  -->
+  <!-- AFTER: blocked by Klaro until "analytics" category is consented (§6.1, §10.3.1) -->
+  <script type="text/plain"
+          data-type="text/javascript"
+          data-name="analytics">
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-89RWJTCPLZ');
+  </script>
+
 
   <!--
   ══════════════════════════════════════════════════════════════════════════
@@ -55,9 +90,19 @@
   ══════════════════════════════════════════════════════════════════════════
   -->
   <meta name="google-adsense-account" content="ca-pub-7344776715655315">
+  <!-- BEFORE: sets marketing cookie unconditionally -->
+  <!--
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7344776715655315"
      crossorigin="anonymous"></script>
-
+  -->
+  <!-- AFTER: blocked by Klaro until "marketing" category is consented (§6.1, §10.3.1) -->
+  <script type="text/plain"
+          data-type="text/javascript"
+          data-name="marketing"
+          data-src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7344776715655315"
+          crossorigin="anonymous">
+  </script> 
+  
   <!--
   ══════════════════════════════════════════════════════════════════════════
   1d. _gcl_aw DUMMY — Google Ads click ID
@@ -67,7 +112,14 @@
   category testing. Use "Reload with ?gclid=" button for the real GTM path.
   ══════════════════════════════════════════════════════════════════════════
   -->
-  <script>
+  <!-- BEFORE-->
+  <!-- <script>
+  document.cookie = '_gcl_aw=GCL.' + Math.floor(Date.now()/1000) + '.test-gclid-dummy123; path=/; max-age=7776000';
+  </script> -->
+  <!-- AFTER: blocked by Klaro until "marketing" category is consented (§6.1, §10.3.1) -->
+  <script type="text/plain"
+          data-type="text/javascript"
+          data-name="marketing">
   document.cookie = '_gcl_aw=GCL.' + Math.floor(Date.now()/1000) + '.test-gclid-dummy123; path=/; max-age=7776000';
   </script>
 
@@ -86,14 +138,41 @@
   when it loads successfully.
   ══════════════════════════════════════════════════════════════════════════
   -->
-  <script>
+  <!-- BEFORE -->
+  <!-- <script>
+  // _fbp: inline fallback — real SDK overwrites; dummy persists if SDK blocked.
+  document.cookie = '_fbp=fb.1.' + Date.now() + '.' + Math.floor(Math.random() * 1e10) + '; path=/; max-age=7776000';
+  // _fbc: always present as dummy (real value requires ?fbclid= landing URL).
+  // Format: fb.<subdomainIndex>.<creationTime_ms>.<fbclid>
+  document.cookie = '_fbc=fb.1.' + Date.now() + '.IwAR0test-dummy-click-123; path=/; max-age=7776000';
+  </script> -->
+  <!-- AFTER: blocked by Klaro until "marketing" category is consented (§6.1, §10.3.1) -->
+  <script type="text/plain"
+          data-type="text/javascript"
+          data-name="marketing">
   // _fbp: inline fallback — real SDK overwrites; dummy persists if SDK blocked.
   document.cookie = '_fbp=fb.1.' + Date.now() + '.' + Math.floor(Math.random() * 1e10) + '; path=/; max-age=7776000';
   // _fbc: always present as dummy (real value requires ?fbclid= landing URL).
   // Format: fb.<subdomainIndex>.<creationTime_ms>.<fbclid>
   document.cookie = '_fbc=fb.1.' + Date.now() + '.IwAR0test-dummy-click-123; path=/; max-age=7776000';
   </script>
+
+  <!-- BEFORE: standard Meta Pixel snippet — loads fbevents.js unconditionally -->
+  <!--
   <script>
+ !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+  n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}
+  (window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init','1995676894381395');
+  fbq('track','PageView');
+  </script>
+  -->
+  <!-- AFTER: blocked by Klaro until "marketing" category is consented (§6.1, §10.3.1) -->  
+  <script type="text/plain"
+          data-type="text/javascript"
+          data-name="marketing">
   !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
   n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
   n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
@@ -102,13 +181,32 @@
   fbq('init','1995676894381395');
   fbq('track','PageView');
   </script>
+
   <!-- Pixel img fires even when fbevents.js is blocked.
        facebook.com responds with Set-Cookie: fr=... on the facebook.com domain. -->
-  <img height="1" width="1" style="display:none;position:absolute"
-    src="https://www.facebook.com/tr?id=1995676894381395&ev=PageView">
+  <!-- BEFORE: standard Meta Pixel img — loads unconditionally -->
+  <!-- <img height="1" width="1" style="display:none;position:absolute"
+    src="https://www.facebook.com/tr?id=1995676894381395&ev=PageView"> -->
+
+  <!-- AFTER: blocked by Klaro until "marketing" category is consented (§6.1, §10.3.1) -->
+  <script type="text/plain"
+          data-type="application/javascript"
+          data-name="marketing"
+          data-src="https://www.facebook.com/tr?id=1995676894381395&ev=PageView">
+          height="1" width="1" style="display:none;position:absolute">
+  </script> 
+
+  <!-- BEFORE: standard Meta Pixel noscript — loads unconditionally -->
+  <!--
   <noscript><img height="1" width="1" style="display:none"
     src="https://www.facebook.com/tr?id=1995676894381395&ev=PageView&noscript=1"/></noscript>
-
+  -->
+  <script type="text/plain"
+          data-type="application/javascript"
+          data-name="marketing"
+          data-src="https://www.facebook.com/tr?id=1995676894381395&ev=PageView&noscript=1"
+          height="1" width="1" style="display:none">
+  </script>
   <!--
   ══════════════════════════════════════════════════════════════════════════
   2b. META CAPI MATCHING COOKIES — DUMMY
@@ -120,7 +218,9 @@
   Sets: th_capi_em, th_capi_fn, th_capi_ln, th_capi_ph (Marketing, 24h)
   ══════════════════════════════════════════════════════════════════════════
   -->
-  <script>
+  <script type="text/plain"
+          data-type="text/javascript"
+          data-name="marketing">
   document.cookie = 'th_capi_em=973dfe0d4f3d5d0a4fbd14e44ea0d5fa0c5dc07a8d0f3c0e7e3a8c1f2b3c4d5e; path=/; max-age=86400';
   document.cookie = 'th_capi_fn=b3a8c1f2d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2; path=/; max-age=86400';
   document.cookie = 'th_capi_ln=c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5; path=/; max-age=86400';
@@ -137,7 +237,9 @@
   only fires for "new" IPs — depends on container IP history).
   ══════════════════════════════════════════════════════════════════════════
   -->
-  <script>
+  <script type="text/plain"
+          data-type="application/javascript"
+          data-name="marketing">
   (function(w,d,t,r,u){var f,n,i;w[u]=w[u]||[];
   f=function(){var o={ti:'343251198',enableAutoSpaTracking:true};
   o.q=w[u];w[u]=new UET(o);w[u].push('pageLoad')};
@@ -157,7 +259,9 @@
   msclkid=. We simulate it inline so it's always present for category testing.
   ══════════════════════════════════════════════════════════════════════════
   -->
-  <script>
+  <script type="text/plain"
+          data-type="application/javascript"
+          data-name="marketing">
   document.cookie = '_uetmsclkid=EwIoA' + Math.floor(Date.now()/1000) + 'test-msclkid-dummy; path=/; max-age=7776000';
   </script>
 
@@ -169,7 +273,9 @@
   CLID set on clarity.ms domain (third-party, requires Clarity→Bing sync).
   ══════════════════════════════════════════════════════════════════════════
   -->
-  <script>
+  <script type="text/plain"
+          data-type="application/javascript"
+          data-name="analytics">
   (function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
   t=l.createElement(r);t.async=1;t.src='https://www.clarity.ms/tag/'+i;
   y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y)}
@@ -181,8 +287,11 @@
 <body>
 
 <!-- GTM noscript -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-N8M7CRQR"
-  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<noscript>
+  <iframe data-src="https://www.googletagmanager.com/ns.html?id=GTM-N8M7CRQR"
+  data-name="analytics"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe>
+</noscript>
 
 <h1>All Trackers — Scanner Target</h1>
 <nav>
@@ -205,8 +314,10 @@
 
 <div style="margin-bottom:24px">
   <h3 style="font-size:14px;margin:0 0 8px;color:#1b4f72">YouTube</h3>
-  <iframe width="560" height="315"
-    src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+  <iframe
+    data-name="marketing"
+    data-src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+    width="560" height="315"
     title="YouTube video"
     allow="encrypted-media"
     allowfullscreen
@@ -216,8 +327,10 @@
 
 <div style="margin-bottom:24px">
   <h3 style="font-size:14px;margin:0 0 8px;color:#1b4f72">Google Maps</h3>
-  <iframe width="560" height="300"
-    src="https://maps.google.com/maps?q=Pune&output=embed"
+  <iframe 
+    data-name="marketing"
+    data-src="https://maps.google.com/maps?q=Pune&output=embed"
+    width="560" height="300"
     title="Google Map"
     style="border:none;display:block;max-width:100%"></iframe>
   <p style="font-size:12px;color:#666;margin:4px 0 0">Sets: <code>NID</code>, <code>CONSENT</code>, <code>AEC</code> under google.com</p>
@@ -226,7 +339,8 @@
 <div style="margin-bottom:24px">
   <h3 style="font-size:14px;margin:0 0 8px;color:#1b4f72">Facebook Page Plugin (facebook.com)</h3>
   <iframe
-    src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Ffacebook&tabs=&width=400&height=130&small_header=true&adapt_container_width=true&hide_cover=false&show_facepile=false"
+    data-name="marketing"
+    data-src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Ffacebook&tabs=&width=400&height=130&small_header=true&adapt_container_width=true&hide_cover=false&show_facepile=false"
     width="400" height="130"
     style="border:none;overflow:hidden;display:block;"
     scrolling="no" frameborder="0" allowfullscreen="true"
@@ -241,7 +355,8 @@
 <div style="margin-bottom:24px">
   <h3 style="font-size:14px;margin:0 0 8px;color:#1b4f72">Bing Maps</h3>
   <iframe
-    src="https://www.bing.com/maps/embed?h=300&w=560&cp=51.5074~-0.1278&lvl=12&typ=d&sty=r&src=SHELL&FORM=MBEDV8"
+    data-name="marketing"
+    data-src="https://www.bing.com/maps/embed?h=300&w=560&cp=51.5074~-0.1278&lvl=12&typ=d&sty=r&src=SHELL&FORM=MBEDV8"
     width="560" height="300"
     style="border:none;display:block;max-width:100%"
     scrolling="no" frameborder="0" allowfullscreen="true"></iframe>
