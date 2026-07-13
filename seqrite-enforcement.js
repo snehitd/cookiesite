@@ -97,31 +97,7 @@ window.PrivacyConsent = (function() {
           updateMetaConsentMode(data);
           // Microsoft Bing Ads (UET): update conversion consent mode
           updateMicrosoftConsentMode(data);
-          // ── Cookie cleanup on revoke (first-party cookies only) ──────────
-          Object.keys(data).forEach(function(cat) {
-            if (data[cat] === false && _cookiesByCategory[cat]) {
-              _cookiesByCategory[cat].forEach(function(cookieName) {
-                ['', '.'].forEach(function(prefix) {
-                  document.cookie = cookieName + '=; Max-Age=0; path=/; domain='
-                                  + prefix + window.location.hostname;
-                });
-              });
-            }
-          });
-          // ── Persist category-level consent to visitor backend ────────────
-          if (_consentManagerId) {
-            try {
-              var xhr = new XMLHttpRequest();
-              xhr.open('POST', '/visitor/v1/saveAndUpdateVisitorsData', true);
-              xhr.setRequestHeader('Content-Type', 'application/json');
-              xhr.send(JSON.stringify({
-                consentManagerId: _consentManagerId,
-                categoryConsents: data
-              }));
-            } catch(e) { /* non-blocking */ }
-          }
-          // ── Reload page if configured ────────────────────────────────────
-          if (_reloadOnSave) { window.location.reload(); }
+          updateClarityCConsentMode(data);
         }
       }
     });
@@ -214,7 +190,17 @@ window.PrivacyConsent = (function() {
   // Called automatically on every consent change via the watch callback.
   function updateMicrosoftConsentMode(consents) {
     window.uetq = window.uetq || [];
-    window.uetq.push('set', { convConsentMode: consents['marketing'] === true });
+    window.uetq.push('consent', 'update', {
+      'ad_storage': consents['marketing'] === true ? 'granted' : 'denied'
+    });
+  }
+
+  function updateClarityConsentMode(consents) {
+    if (typeof window.clarity !== 'function') return;
+    window.clarity('consentv2', {
+      ad_Storage:        consents['marketing'] === true ? 'granted' : 'denied',
+      analytics_Storage: consents['analytics'] === true ? 'granted' : 'denied'
+    });
   }
 
   // ── Auto-initialize ───────────────────────────────────────────────────
@@ -242,6 +228,7 @@ window.PrivacyConsent = (function() {
     rejectAll:               rejectAll,
     updateGoogleConsentMode: updateGoogleConsentMode,
     updateMetaConsentMode:   updateMetaConsentMode,
-    updateMicrosoftConsentMode: updateMicrosoftConsentMode
+    updateMicrosoftConsentMode: updateMicrosoftConsentMode,
+    updateClarityConsentMode: updateClarityConsentMode
   };
 })();
