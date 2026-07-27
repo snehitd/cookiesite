@@ -4,13 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>All Trackers — Scanner Target Page</title>
+  <!-- 
   <link rel="stylesheet" href="seqrite-config.css"/>
   <script data-config="seqriteConfig" type="application/javascript" src="seqrite.js"></script>
   <script type="application/javascript" src="seqrite-config.js"></script>
   <script defer src="seqrite-enforcement.js"></script>
- <!--
+  -->
+  <!--
   ══════════════════════════════════════════════════════════════════════════
-  1. GOOGLE — GTM-N8M7CRQR
+  1a. GOOGLE — GTM-N8M7CRQR
   ══════════════════════════════════════════════════════════════════════════
   GTM container fires on load:
     Tag 1 — GA4 (G-89RWJTCPLZ)       → _ga, _ga_89RWJTCPLZ
@@ -19,10 +21,14 @@
   No consent mode configured — all cookies fire immediately.
   ══════════════════════════════════════════════════════════════════════════
   -->
-  <script type="text/plain"
-          data-type="application/javascript"
-          data-name="analytics"
-          data-src="https://www.googletagmanager.com/gtm.js?id=GTM-N8M7CRQR">
+  <script>
+  (function(w,d,s,l,i){w[l]=w[l]||[];
+  w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});
+  var f=d.getElementsByTagName(s)[0],j=d.createElement(s),
+  dl=l!='dataLayer'?'&l='+l:'';j.async=true;
+  j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+  f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-N8M7CRQR');
   </script>
 
   <!--
@@ -33,44 +39,26 @@
   _ga is shared with Stream 1 — one client ID covers all properties.
   ══════════════════════════════════════════════════════════════════════════
   -->
-  <!-- Google Analytics 4 (external script) -->
-  <script type="text/plain"
-          data-type="application/javascript"
-          data-name="analytics"
-          data-src="https://www.googletagmanager.com/gtag/js?id=G-01XNDLZCYQ">
+  <!-- Google Analytics 4 (external script) 
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-01XNDLZCYQ"></script>
+  -->
+  <!-- Sets _ga - inline GA4 init runs unconditionally   -->
+  <script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){ dataLayer.push(arguments); }
+  gtag('js', new Date());
+  gtag('config', 'G-01XNDLZCYQ');
   </script>
-
-  <!-- inline GA4 init runs unconditionally -->
-  <script type="text/plain"
-          data-type="application/javascript"
-          data-name="analytics">
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){ dataLayer.push(arguments); }
-    gtag('js', new Date());
-    gtag('config', 'G-01XNDLZCYQ');
-  </script>
-
   <!--
   ══════════════════════════════════════════════════════════════════════════
   1c. GOOGLE ADSENSE — ca-pub-7344776715655315
   ══════════════════════════════════════════════════════════════════════════
-  Sets: test_cookie (Marketing) — DoubleClick permission probe, self-deletes.
+  Sets: test_cookie, IDE (Marketing) — DoubleClick permission probe, self-deletes.
   ══════════════════════════════════════════════════════════════════════════
   -->
   <meta name="google-adsense-account" content="ca-pub-7344776715655315">
-  <!-- BEFORE: sets marketing cookie unconditionally -->
-  <!--
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7344776715655315"
      crossorigin="anonymous"></script>
-  -->
-  <!-- AFTER: blocked by Klaro until "marketing" category is consented (§6.1, §10.3.1) -->
-  <script type="text/plain"
-          data-type="application/javascript"
-          data-name="marketing"
-          data-src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7344776715655315"
-          crossorigin="anonymous">
-  </script> 
-  
   <!--
   ══════════════════════════════════════════════════════════════════════════
   1d. _gcl_aw DUMMY — Google Ads click ID
@@ -80,45 +68,28 @@
   category testing. Use "Reload with ?gclid=" button for the real GTM path.
   ══════════════════════════════════════════════════════════════════════════
   -->
-  <!-- BEFORE-->
-  <!-- <script>
+  <script>
   document.cookie = '_gcl_aw=GCL.' + Math.floor(Date.now()/1000) + '.test-gclid-dummy123; path=/; max-age=7776000';
-  </script> -->
-  <!-- AFTER: blocked by Klaro until "marketing" category is consented (§6.1, §10.3.1) -->
-  <script type="text/plain"
-          data-type="text/javascript"
-          data-name="marketing">
-    document.cookie = '_gcl_aw=GCL.' + Math.floor(Date.now()/1000) + '.test-gclid-dummy123; path=/; max-age=7776000';
   </script>
 
   <!--
   ══════════════════════════════════════════════════════════════════════════
-  2. META PIXEL — Direct tag (belt-and-suspenders alongside GTM tag)
+  2. META PIXEL — Direct tag (1995676894381395)
   ══════════════════════════════════════════════════════════════════════════
   Pixel ID: 1995676894381395
   Fires PageView immediately. Meta deduplicates if GTM tag already fired.
   Sets: _fbp (Marketing, 90 days)
-
-  FALLBACK: _fbp is also written inline immediately in the correct SDK format
-  (fb.<subdomainIndex>.<creationTime_ms>.<randomInt>). This guarantees the
-  cookie is always present even if connect.facebook.net is blocked by an ad
-  blocker or corporate DNS filter. The real SDK overwrites the dummy value
-  when it loads successfully.
   ══════════════════════════════════════════════════════════════════════════
   -->
-
-  <script type="text/plain"
-          data-type="application/javascript"
-          data-name="marketing">
-    // _fbc: always present as dummy (real value requires ?fbclid= landing URL).
-    // Format: fb.<subdomainIndex>.<creationTime_ms>.<fbclid>
-    document.cookie = '_fbc=fb.1.' + Date.now() + '.IwAR0test-dummy-click-123; path=/; max-age=7776000';
+  <script>
+  // _fbc: always present as dummy (real value requires ?fbclid= landing URL).
+  // Format: fb.<subdomainIndex>.<creationTime_ms>.<fbclid>
+  document.cookie = '_fbc=fb.1.' + Date.now() + '.IwAR0test-dummy-click-123; path=/; max-age=7776000';
   </script>
 
+  <!-- Sets _fbp   -->
 
-  <script type="text/plain"
-          data-type="application/javascript"
-          data-name="marketing">
+  <script>
   !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
   n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
   n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
@@ -127,14 +98,15 @@
   fbq('init','1995676894381395');
   fbq('track','PageView');
   </script>
-
+  
   <!-- Pixel img fires even when fbevents.js is blocked.
-       facebook.com responds with Set-Cookie: fr=... on the facebook.com domain. -->
-  <!-- <img height="1" width="1" style="display:none;position:absolute"
+       facebook.com responds with Set-Cookie: fr=... on the facebook.com domain. 
+  <img height="1" width="1" style="display:none;position:absolute"
     src="https://www.facebook.com/tr?id=1995676894381395&ev=PageView">
-  <noscript><img height="1" width="1" style="display:none"
+  
+    <noscript><img height="1" width="1" style="display:none"
     src="https://www.facebook.com/tr?id=1995676894381395&ev=PageView&noscript=1"/></noscript>
-  -->
+      -->
   <!--
   ══════════════════════════════════════════════════════════════════════════
   2b. META CAPI MATCHING COOKIES — DUMMY
@@ -146,9 +118,7 @@
   Sets: th_capi_em, th_capi_fn, th_capi_ln, th_capi_ph (Marketing, 24h)
   ══════════════════════════════════════════════════════════════════════════
   -->
-  <script type="text/plain"
-          data-type="application/javascript"
-          data-name="marketing">
+  <script>
   document.cookie = 'th_capi_em=973dfe0d4f3d5d0a4fbd14e44ea0d5fa0c5dc07a8d0f3c0e7e3a8c1f2b3c4d5e; path=/; max-age=86400';
   document.cookie = 'th_capi_fn=b3a8c1f2d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2; path=/; max-age=86400';
   document.cookie = 'th_capi_ln=c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5; path=/; max-age=86400';
@@ -161,13 +131,10 @@
   ══════════════════════════════════════════════════════════════════════════
   Loads bat.js from bat.bing.net and pushes pageLoad immediately.
   Sets: _uetsid (Marketing, 30 min), _uetvid (Marketing, 180 days)
-  May also trigger Clarity→Bing sync: MUID, ANONCHK (server-side,
-  only fires for "new" IPs — depends on container IP history).
   ══════════════════════════════════════════════════════════════════════════
   -->
-  <script type="text/plain"
-          data-type="application/javascript"
-          data-name="marketing">
+
+  <script>
   (function(w,d,t,r,u){var f,n,i;w[u]=w[u]||[];
   f=function(){var o={ti:'343251198',enableAutoSpaTracking:true};
   o.q=w[u];w[u]=new UET(o);w[u].push('pageLoad')};
@@ -178,7 +145,6 @@
   };i=d.getElementsByTagName(t)[0];i.parentNode.insertBefore(n,i)
   })(window,document,'script','//bat.bing.net/bat.js','uetq');
   </script>
-
   <!--
   ══════════════════════════════════════════════════════════════════════════
   3b. _uetmsclkid DUMMY — Bing click ID
@@ -187,9 +153,7 @@
   msclkid=. We simulate it inline so it's always present for category testing.
   ══════════════════════════════════════════════════════════════════════════
   -->
-  <script type="text/plain"
-          data-type="application/javascript"
-          data-name="marketing">
+  <script>
   document.cookie = '_uetmsclkid=EwIoA' + Math.floor(Date.now()/1000) + 'test-msclkid-dummy; path=/; max-age=7776000';
   </script>
 
@@ -198,12 +162,14 @@
   4. MICROSOFT CLARITY — Tag: wy0xa34b85
   ══════════════════════════════════════════════════════════════════════════
   Sets: _clck (Analytics, 1 year), _clsk (Analytics, 1 day)
-  CLID set on clarity.ms domain (third-party, requires Clarity→Bing sync).
+  Sets: CLID(Analytics), MUID(Marketing) on clarity.ms domain (third-party, requires Clarity→Bing sync). 
+  Sets: ANONCHK(Marketing), MR(Marketing), SM(Analytics) c.clarity.ms domain (third-party).
+  Sets: SRM_B(Marketing), MR(Marketing) on c.bing.com domain (third-party). 
+  Sets: MUID(Marketing) on .bing.com domain (third-party).
   ══════════════════════════════════════════════════════════════════════════
-  -->
-  <script type="text/plain"
-          data-type="application/javascript"
-          data-name="analytics">
+    -->
+
+  <script>
   (function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
   t=l.createElement(r);t.async=1;t.src='https://www.clarity.ms/tag/'+i;
   y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y)}
@@ -215,11 +181,8 @@
 <body>
 
 <!-- GTM noscript 
-<noscript>
-  <iframe data-src="https://www.googletagmanager.com/ns.html?id=GTM-N8M7CRQR"
-  data-name="analytics"
-  height="0" width="0" style="display:none;visibility:hidden"></iframe>
-</noscript>
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-N8M7CRQR"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 -->
 <h1>All Trackers — Scanner Target</h1>
 <nav>
@@ -239,36 +202,35 @@
   (not this site) in DevTools → Application → Cookies. The scanner sees them via CDP
   <code>Network.responseReceivedExtraInfo</code> headers.
 </p>
-
+ 
+<!-- Sets: YSC,__Secure-YEC, __Secure-YNID - Functional __Secure-ROLLOUT-TOKEN, VISITOR_INFO1_LIVE, VISITOR_PRIVACY_METADATA  -- Maketing
+ under youtube.com  -->
+<!-- for consent use     src="https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ" -->
 <div style="margin-bottom:24px">
   <h3 style="font-size:14px;margin:0 0 8px;color:#1b4f72">YouTube</h3>
-  <iframe
-    data-name="marketing"
-    data-src="https://www.youtube.com/embed/dQw4w9WgXcQ"
-    width="560" height="315"
+  <iframe width="560" height="315"
     title="YouTube video"
+    src="https://www.youtube.com/embed/dQw4w9WgXcQ"
     allow="encrypted-media"
     allowfullscreen
     style="border:none;display:block;max-width:100%"></iframe>
-  <p style="font-size:12px;color:#666;margin:4px 0 0">Sets: <code>YSC</code>, <code>VISITOR_INFO1_LIVE</code>, <code>__Secure-YEC</code> under youtube.com</p>
 </div>
+<!-- Sets: NID, __SECURE-STRP under google.com only when clicked -->
 
 <div style="margin-bottom:24px">
   <h3 style="font-size:14px;margin:0 0 8px;color:#1b4f72">Google Maps</h3>
-  <iframe 
-    data-name="others"
-    data-src="https://maps.google.com/maps?q=Pune&output=embed"
-    width="560" height="300"
+  <iframe width="560" height="300"
+    src="https://maps.google.com/maps?q=Pune&output=embed"
     title="Google Map"
     style="border:none;display:block;max-width:100%"></iframe>
-  <p style="font-size:12px;color:#666;margin:4px 0 0">Sets: <code>NID</code>, <code>CONSENT</code>, <code>AEC</code> under google.com</p>
 </div>
+
+<!-- Sets: datr, fr, s, wd under facebook.com only when clicked Marketing -->
 
 <div style="margin-bottom:24px">
   <h3 style="font-size:14px;margin:0 0 8px;color:#1b4f72">Facebook Page Plugin (facebook.com)</h3>
   <iframe
-    data-name="marketing"
-    data-src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Ffacebook&tabs=&width=400&height=130&small_header=true&adapt_container_width=true&hide_cover=false&show_facepile=false"
+    src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Ffacebook&tabs=&width=400&height=130&small_header=true&adapt_container_width=true&hide_cover=false&show_facepile=false"
     width="400" height="130"
     style="border:none;overflow:hidden;display:block;"
     scrolling="no" frameborder="0" allowfullscreen="true"
@@ -279,17 +241,25 @@
     <code>fr</code> is triggered separately by the pixel tracking img above the iframes section.
   </p>
 </div>
+<!--
+  ══════════════════════════════════════════════════════════════════════════
+  Sets: MUID on bing.com domain - Marketing
+  Sets: MUIDB on www.bing.com domain (third-party). - Marketing
+  Sets: SRCHD, SRCHUID, SRCHUSR, SRCHHPGUSR on .bing.com domain (third party) - Marketing
+  Sets: _SS on .bing.com domain (third party) - Analytics
+  Sets: _EDGE_S, _EDGE_V on .bing.com domain (third party) - Others
+  ══════════════════════════════════════════════════════════════════════════
+    -->
 
-<div style="margin-bottom:24px">
+  <div style="margin-bottom:24px">
   <h3 style="font-size:14px;margin:0 0 8px;color:#1b4f72">Bing Maps</h3>
   <iframe
-    data-name="marketing"
-    data-src="https://www.bing.com/maps/embed?h=300&w=560&cp=51.5074~-0.1278&lvl=12&typ=d&sty=r&src=SHELL&FORM=MBEDV8"
+    src="https://www.bing.com/maps/embed?h=300&w=560&cp=51.5074~-0.1278&lvl=12&typ=d&sty=r&src=SHELL&FORM=MBEDV8"
     width="560" height="300"
     style="border:none;display:block;max-width:100%"
     scrolling="no" frameborder="0" allowfullscreen="true"></iframe>
-  <p style="font-size:12px;color:#666;margin:4px 0 0">Sets: <code>MUID</code>, <code>MR</code>, <code>SRCHUSR</code>, <code>SRCHD</code>, <code>_SS</code>, <code>MSFPC</code> under bing.com</p>
 </div>
+
 
 <footer>all-trackers.html — consolidated scanner target for Cookie Consent Management dev testing</footer>
 </body>
