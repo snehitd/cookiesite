@@ -303,7 +303,7 @@
 </div>
 
 <style>
-  .floating-btn {
+  .pc-preference-btn {
     position: fixed;
     bottom: 20px;
     right: 20px;
@@ -322,14 +322,18 @@
     z-index: 999;
     transition: background-color 0.3s, box-shadow 0.3s;
   }
-  .floating-btn:hover {
+  .pc-preference-btn:hover {
     background-color: #0f3849;
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
   }
 </style>
 
-<button type="button" class="floating-btn" id="preferencesBtn" onclick="PrivacyConsent.openPreferenceCentre(true)" title="Manage Cookie Preferences">⚙️</button>
-
+<button type="button" class="pc-preference-btn" style="display:none;" id="preferencesBtn" onclick="PrivacyConsent.openPreferenceCentre()" title="Manage Cookie Preferences">⚙️</button>
+<!-- Cookie Preference Centre Launcher 
+<button type="button" class="pc-preference-btn" style="display:none;" onclick="PrivacyConsent.openPreferenceCentre(true)">
+  Manage Cookie Preferences
+</button>
+-->
 <footer>all-trackers.html — consolidated scanner target for Cookie Consent Management dev testing</footer>
 </body>
 </html>
