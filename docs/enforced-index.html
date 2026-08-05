@@ -4,12 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>All Trackers — Scanner Target Page</title>
-  <!--
-  <link rel="stylesheet" href="seqrite-config.css"/>
-  <script data-config="seqriteConfig" type="application/javascript" src="seqrite.js"></script>
-  <script type="application/javascript" src="seqrite-config.js"></script>
-  <script defer src="seqrite-enforcement.js"></script>
-  -->
+  <link rel="stylesheet" href="https://devop.pre-dataprivacy.com/cmapi/dynamic/v1/config/css/6a60948cc80b553d91464f3d"/>
+  <script type="application/javascript" src="https://devop.pre-dataprivacy.com/cmapi/dynamic/v1/config/js/6a60948cc80b553d91464f3d"></script>
  <!--
   ══════════════════════════════════════════════════════════════════════════
   1. GOOGLE — GTM-N8M7CRQR
@@ -118,18 +114,31 @@
   </script>
 
 
+  <!-- _fbp fix superseded: the loader/stub half of this now lives in
+       seqrite-enforcement.js (the fbq bare-queue-stub bug there was the
+       actual root cause). Kept here, commented, in case that change needs
+       to be rolled back.
   <script type="text/plain"
           data-type="application/javascript"
           data-name="marketing">
+  delete window.fbq;
   !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
   n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
   n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
   t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}
   (window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+  fbq('consent', 'grant');
   fbq('init','1995676894381395');
   fbq('track','PageView');
   </script>
+  -->
 
+  <script type="text/plain"
+          data-type="application/javascript"
+          data-name="marketing">
+  fbq('init','1995676894381395');
+  fbq('track','PageView');
+  </script>
   <!-- Pixel img fires even when fbevents.js is blocked.
        facebook.com responds with Set-Cookie: fr=... on the facebook.com domain. -->
   <!-- <img height="1" width="1" style="display:none;position:absolute"
@@ -191,7 +200,7 @@
   -->
   <script type="text/plain"
           data-type="application/javascript"
-          data-name="marketing">
+          data-name="analytics">
   document.cookie = '_uetmsclkid=EwIoA' + Math.floor(Date.now()/1000) + 'test-msclkid-dummy; path=/; max-age=7776000';
   </script>
 
@@ -293,6 +302,45 @@
   <p style="font-size:12px;color:#666;margin:4px 0 0">Sets: <code>MUID</code>, <code>MR</code>, <code>SRCHUSR</code>, <code>SRCHD</code>, <code>_SS</code>, <code>MSFPC</code> under bing.com</p>
 </div>
 
+<style>
+  .pc-preference-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background-color: #1b4f72;
+    color: white;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+    transition: background-color 0.3s, box-shadow 0.3s;
+  }
+  .pc-preference-btn:hover {
+    background-color: #0f3849;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+  }
+</style>
+
+<button type="button" class="pc-preference-btn" style="display:none;" id="preferencesBtn" onclick="PrivacyConsent.openPreferenceCentre()" title="Manage Cookie Preferences">⚙️</button>
+<!-- Cookie Preference Centre Launcher 
+<button type="button" class="pc-preference-btn" style="display:none;" onclick="PrivacyConsent.openPreferenceCentre(true)">
+  Manage Cookie Preferences
+</button>
+-->
 <footer>all-trackers.html — consolidated scanner target for Cookie Consent Management dev testing</footer>
 </body>
 </html>
+<!--
+ window.klaro.getManager().watch({
+    update: function(obj, name, data) {
+      if (name === 'saveConsents') { window.location.reload(); }
+    }
+  });
+-->
