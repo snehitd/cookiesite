@@ -5,9 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- CSP repro: nonce-based policy matching the customer's setup. The loader below
        is allowlisted by domain, but the inline enforcement script it appends has no
-       nonce and should be blocked (script-src-elem). Do not add 'unsafe-inline'. -->
+       nonce and should be blocked (script-src-elem). Do not add 'unsafe-inline'.
+       Commented out for now. -->
+  <!--
   <meta http-equiv="Content-Security-Policy"
         content="script-src 'self' 'nonce-devtest123' https://devop.pre-dataprivacy.com https://www.googletagmanager.com https://pagead2.googlesyndication.com https://connect.facebook.net https://bat.bing.net https://www.clarity.ms https://scripts.clarity.ms">
+  -->
   <title>All Trackers — Scanner Target Page</title>
 
  <!--
