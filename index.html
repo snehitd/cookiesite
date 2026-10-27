@@ -7,7 +7,7 @@
        is allowlisted by domain, but the inline enforcement script it appends has no
        nonce and should be blocked (script-src-elem). Do not add 'unsafe-inline'. -->
   <meta http-equiv="Content-Security-Policy"
-        content="script-src 'self' 'nonce-devtest123' https://devop.pre-dataprivacy.com">
+        content="script-src 'self' 'nonce-devtest123' https://devop.pre-dataprivacy.com https://www.googletagmanager.com https://pagead2.googlesyndication.com https://connect.facebook.net https://bat.bing.net https://www.clarity.ms https://scripts.clarity.ms">
   <title>All Trackers — Scanner Target Page</title>
 
  <!--
@@ -45,7 +45,7 @@
   <!-- inline GA4 init runs unconditionally -->
   <script type="text/plain"
           data-type="application/javascript"
-          data-name="analytics">
+          data-name="analytics" nonce="devtest123">
     window.dataLayer = window.dataLayer || [];
     function gtag(){ dataLayer.push(arguments); }
     gtag('js', new Date());
@@ -89,7 +89,7 @@
   <!-- AFTER: blocked by Klaro until "marketing" category is consented (§6.1, §10.3.1) -->
   <script type="text/plain"
           data-type="text/javascript"
-          data-name="marketing">
+          data-name="marketing" nonce="devtest123">
     document.cookie = '_gcl_aw=GCL.' + Math.floor(Date.now()/1000) + '.test-gclid-dummy123; path=/; max-age=7776000';
   </script>
 
@@ -111,7 +111,7 @@
 
   <script type="text/plain"
           data-type="application/javascript"
-          data-name="marketing">
+          data-name="marketing" nonce="devtest123">
     // _fbc: always present as dummy (real value requires ?fbclid= landing URL).
     // Format: fb.<subdomainIndex>.<creationTime_ms>.<fbclid>
     document.cookie = '_fbc=fb.1.' + Date.now() + '.IwAR0test-dummy-click-123; path=/; max-age=7776000';
@@ -139,7 +139,7 @@
 
   <script type="text/plain"
           data-type="application/javascript"
-          data-name="marketing">
+          data-name="marketing" nonce="devtest123">
   fbq('init','1995676894381395');
   fbq('track','PageView');
   </script>
@@ -163,7 +163,7 @@
   -->
   <script type="text/plain"
           data-type="application/javascript"
-          data-name="marketing">
+          data-name="marketing" nonce="devtest123">
   document.cookie = 'th_capi_em=973dfe0d4f3d5d0a4fbd14e44ea0d5fa0c5dc07a8d0f3c0e7e3a8c1f2b3c4d5e; path=/; max-age=86400';
   document.cookie = 'th_capi_fn=b3a8c1f2d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2; path=/; max-age=86400';
   document.cookie = 'th_capi_ln=c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5; path=/; max-age=86400';
@@ -182,7 +182,7 @@
   -->
   <script type="text/plain"
           data-type="application/javascript"
-          data-name="marketing">
+          data-name="marketing" nonce="devtest123">
   (function(w,d,t,r,u){var f,n,i;w[u]=w[u]||[];
   f=function(){var o={ti:'343251198',enableAutoSpaTracking:true};
   o.q=w[u];w[u]=new UET(o);w[u].push('pageLoad')};
@@ -204,7 +204,7 @@
   -->
   <script type="text/plain"
           data-type="application/javascript"
-          data-name="analytics">
+          data-name="analytics" nonce="devtest123">
   document.cookie = '_uetmsclkid=EwIoA' + Math.floor(Date.now()/1000) + 'test-msclkid-dummy; path=/; max-age=7776000';
   </script>
 
@@ -218,7 +218,7 @@
   -->
   <script type="text/plain"
           data-type="application/javascript"
-          data-name="analytics">
+          data-name="analytics" nonce="devtest123">
   (function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
   t=l.createElement(r);t.async=1;t.src='https://www.clarity.ms/tag/'+i;
   y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y)}
